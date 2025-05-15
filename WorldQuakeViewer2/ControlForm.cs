@@ -1,9 +1,6 @@
-using System.Data;
 using System.Drawing.Imaging;
 using System.Media;
 using System.Text;
-using LL2FERC;
-using static WorldQuakeViewer2.Utilities;
 
 namespace WorldQuakeViewer2
 {
@@ -32,7 +29,7 @@ namespace WorldQuakeViewer2
         /// <summary>
         /// 震央マーク用色置換
         /// </summary>
-        internal static ImageAttributes ia = new ImageAttributes();
+        internal static ImageAttributes ia = new();
 
         /// <summary>
         /// staticでアクセスできるようにしたログ表示テキストボックス

@@ -1,19 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
+﻿using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using WorldQuakeViewer.Properties;
-using static WorldQuakeViewer.CtrlForm;
-using static WorldQuakeViewer.Util_Func;
 
-namespace WorldQuakeViewer
+namespace WorldQuakeViewer2
 {
     public partial class MapGen : Form
     {
@@ -26,7 +15,7 @@ namespace WorldQuakeViewer
         {
             try
             {
-                List<ColorSettingList> colorSettings = new List<ColorSettingList>();
+                List<ColorSettingList> colorSettings = new();
                 if (!File.Exists("Setting\\map-color.csv"))
                     File.WriteAllText("Setting\\map-color.csv", Resources.map_color);
                 Thread.Sleep(10);//↑の書き込みが間に合ってなくておかしいときがある?
@@ -36,7 +25,7 @@ namespace WorldQuakeViewer
                     string[] color = color__.Split(',');
                     if (color.Length != 5 || color[0] == "Name")
                         continue;
-                    ColorSettingList colorSettingList = new ColorSettingList
+                    ColorSettingList colorSettingList = new()
                     {
                         Name = NameConvert[color[0]],
                         Alpha = int.Parse(color[1]),
@@ -62,7 +51,7 @@ namespace WorldQuakeViewer
             }
         }
 
-        public Dictionary<string, string> NameConvert = new Dictionary<string, string>
+        public Dictionary<string, string> NameConvert = new()
         {
             { "ocean", "海" },
             { "land", "陸" },
@@ -76,7 +65,7 @@ namespace WorldQuakeViewer
             { "graticules-lon2", "経線(180度ごと)" }
         };
 
-        public Dictionary<string, string> NameConvertReverse = new Dictionary<string, string>
+        public Dictionary<string, string> NameConvertReverse = new()
         {
             { "海", "ocean" },
             { "陸", "land" },
@@ -176,17 +165,17 @@ namespace WorldQuakeViewer
                 Text2.Text = "地図描画中…";
                 await Task.Delay(1);
                 JObject json = JObject.Parse(File.ReadAllText("Resources\\ne_50m_land.json"));
-                Bitmap baseMap = new Bitmap(3600, 1800);
+                Bitmap baseMap = new(3600, 1800);
                 Graphics g = Graphics.FromImage(baseMap);
                 g.Clear(col_ocn);
-                using (GraphicsPath maps = new GraphicsPath())
+                using (GraphicsPath maps = new())
                 {
                     maps.StartFigure();
                     foreach (JToken json_1 in json.SelectToken("geometries"))
                     {
                         if ((string)json_1.SelectToken("type") == "Polygon")
                         {
-                            List<Point> points = new List<Point>();
+                            List<Point> points = new();
                             foreach (JToken json_2 in json_1.SelectToken("coordinates[0]"))
                                 points.Add(new Point((int)(10d * ((double)json_2.SelectToken("[0]") + 180d)), (int)(10d * (90d - (double)json_2.SelectToken("[1]")))));
                             maps.AddPolygon(points.ToArray());
@@ -195,7 +184,7 @@ namespace WorldQuakeViewer
                         {
                             foreach (JToken json_2 in json_1.SelectToken("coordinates"))
                             {
-                                List<Point> points = new List<Point>();
+                                List<Point> points = new();
                                 foreach (JToken json_3 in json_2.SelectToken("[0]"))
                                     points.Add(new Point((int)(10d * ((double)json_3.SelectToken("[0]") + 180d)), (int)(10d * (90d - (double)json_3.SelectToken("[1]")))));
                                 maps.AddPolygon(points.ToArray());
@@ -219,7 +208,7 @@ namespace WorldQuakeViewer
                 json = JObject.Parse(File.ReadAllText("Resources\\PB2002_steps.json"));
                 foreach (JToken json_1 in json.SelectToken("features"))
                 {
-                    List<Point> points = new List<Point>();
+                    List<Point> points = new();
                     foreach (JToken json_2 in json_1.SelectToken("geometry.coordinates"))
                         points.Add(new Point((int)(10d * ((double)json_2.SelectToken("[0]") + 180d)), (int)(10d * (90d - (double)json_2.SelectToken("[1]")))));
                     string type = (string)json_1.SelectToken("properties.STEPCLASS");
@@ -251,10 +240,10 @@ namespace WorldQuakeViewer
 
                 Text2.Text = "緯経線描画中…";
                 await Task.Delay(1);
-                Pen border = new Pen(col_g_n, 4);
-                Pen border_lon1 = new Pen(col_glo, 4);
-                Pen border_lon2 = new Pen(col_gln, 8);
-                Pen border_lat2 = new Pen(col_gla, 8);
+                Pen border = new(col_g_n, 4);
+                Pen border_lon1 = new(col_glo, 4);
+                Pen border_lon2 = new(col_gln, 8);
+                Pen border_lat2 = new(col_gla, 8);
                 for (int x = 0; x <= 3600; x += 300)
                 {
                     if (x == 0 || x == 1800 || x == 3600)

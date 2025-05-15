@@ -13,13 +13,13 @@ namespace WorldQuakeViewer2
             /// <summary>
             /// 設定バージョン
             /// </summary>
-            /// <remarks>getonly</remarks>
-            public string Version { get; set; } = version;
+            /// <remarks>基本的に get only</remarks>
+            public string Version { get; set; } = typeof(Program).Assembly.GetName().Version!.ToString();
 
             /// <summary>
             /// 処理するデータ元ごとのデータ処理
             /// </summary>
-            public Data_[] Datas { get; set; } = new int[DataAuthorCount].Select((n, i) => new Data_
+            public C_Data[] Datas { get; set; } = new int[DataAuthorCount].Select((n, i) => new C_Data
             {
                 Name = ((DataAuthor)i).ToString(),
                 URL = DataDefURL[(DataAuthor)Enum.ToObject(typeof(DataAuthor), i)]//enum追加時も変えなくてもいいように
@@ -28,17 +28,17 @@ namespace WorldQuakeViewer2
             /// <summary>
             /// 画面ごとの表示処理
             /// </summary>
-            public View_[] Views { get; set; } = new View_[] { new() };
+            public C_View[] Views { get; set; } = new C_View[] { new() };
 
             /// <summary>
             /// その他の設定
             /// </summary>
-            public Other_ Other { get; set; } = new Other_();
+            public C_Other Other { get; set; } = new C_Other();
 
             /// <summary>
             /// その他の設定
             /// </summary>
-            public class Other_
+            public class C_Other
             {
                 /// <summary>
                 /// EMSCのQuakeMLのID(UNID)をEMSCのIDに自動で変換するか
@@ -79,7 +79,7 @@ namespace WorldQuakeViewer2
                     /// Config_DisplayからConfigに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator LogN_(Config_Display.Other_.LogN_ from) => new()
+                    public static explicit operator LogN_(Config_Display.C_Other.C_LogN from) => new()
                     {
                         Normal_Enable = from.Normal_Enable,
                         Normal_AutoDelete = from.Normal_AutoDelete,
@@ -92,7 +92,7 @@ namespace WorldQuakeViewer2
                 /// Config_DisplayからConfigに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
-                public static explicit operator Other_(Config_Display.Other_ from) => new()
+                public static explicit operator C_Other(Config_Display.C_Other from) => new()
                 {
                     EMSCqmlIDConv = from.EMSCqmlIDConv,
                     LogN = (LogN_)from.LogN
@@ -102,19 +102,19 @@ namespace WorldQuakeViewer2
             /// <summary>
             /// データ処理
             /// </summary>
-            public class Data_
+            public class C_Data
             {
                 /// <summary>
                 /// 取得元
                 /// </summary>
                 /// <remarks>自動で設定されます</remarks>
-                public string Name { get; set; }
+                public string Name { get; set; } = "null";
 
                 /// <summary>
                 /// 取得するURL
                 /// </summary>
                 /// <remarks>自動で設定されます</remarks>
-                public string URL { get; set; }
+                public string URL { get; set; } = "null";
 
                 /// <summary>
                 /// データの種類
@@ -124,7 +124,7 @@ namespace WorldQuakeViewer2
                 /// <summary>
                 /// 取得時間(毎分x秒) -1で無効
                 /// </summary>
-                public int[] GetTimes { get; set; } = new int[2] { -1, -1 };
+                public int[] GetTimes { get; set; } = [-1, -1];
 
                 /// <summary>
                 /// (QuakeMLのみ)必要最小観測点数
@@ -134,37 +134,37 @@ namespace WorldQuakeViewer2
                 /// <summary>
                 /// 更新検知対象
                 /// </summary>
-                public Update_ Update { get; set; } = new Update_();
+                public C_Update Update { get; set; } = new();
 
                 /// <summary>
                 /// 音声再生
                 /// </summary>
-                public Sound_ Sound { get; set; } = new Sound_();
+                public C_Sound Sound { get; set; } = new();
 
                 /// <summary>
                 /// 棒読みちゃん送信
                 /// </summary>
-                public Bouyomi_ Bouyomi { get; set; } = new Bouyomi_();
+                public C_Bouyomi Bouyomi { get; set; } = new();
 
                 /// <summary>
                 /// socket送信
                 /// </summary>
-                public Socket_ Socket { get; set; } = new Socket_();
+                public C_Socket Socket { get; set; } = new();
 
                 /// <summary>
                 /// webhook送信
                 /// </summary
-                public Webhook_ Webhook { get; set; } = new Webhook_();
+                public C_Webhook Webhook { get; set; } = new();
 
                 /// <summary>
                 /// ログ出力関連(地震)
                 /// </summary>
-                public LogE_ LogE { get; set; } = new LogE_();
+                public C_LogE LogE { get; set; } = new();
 
                 /// <summary>
                 /// 更新検知対象
                 /// </summary>
-                public class Update_
+                public class C_Update
                 {
                     /// <summary>
                     /// 更新確認対象期間
@@ -225,7 +225,7 @@ namespace WorldQuakeViewer2
                     /// Config_DisplayからConfigに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator Update_(Config_Display.Data_.Update_ from) => new()
+                    public static explicit operator C_Update(Config_Display.C_Data.C_Update from) => new()
                     {
                         MaxPeriod = from.MaxPeriod,
                         Time = from.Time,
@@ -244,7 +244,7 @@ namespace WorldQuakeViewer2
                 /// <summary>
                 /// 音声再生
                 /// </summary>
-                public class Sound_
+                public class C_Sound
                 {
                     /// <summary>
                     /// M4.5未満(初報)の音声ファイルのパス
@@ -300,7 +300,7 @@ namespace WorldQuakeViewer2
                     /// Config_DisplayからConfigに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator Sound_(Config_Display.Data_.Sound_ from) => new()
+                    public static explicit operator C_Sound(Config_Display.C_Data.C_Sound from) => new()
                     {
                         L1_Path = from.L1_Path,
                         L2_Path = from.L2_Path,
@@ -318,7 +318,7 @@ namespace WorldQuakeViewer2
                 /// <summary>
                 /// 棒読みちゃん送信
                 /// </summary>
-                public class Bouyomi_
+                public class C_Bouyomi
                 {
                     /// <summary>
                     /// 有効か
@@ -368,12 +368,12 @@ namespace WorldQuakeViewer2
                     /// <summary>
                     /// 送信する文の置換
                     /// </summary>
-                    public TextReplace_[] TextReplace { get; set; } = new TextReplace_[] { new() };
+                    public C_TextReplace[] TextReplace { get; set; } = [new()];
 
                     /// <summary>
                     /// 送信する文の置換
                     /// </summary>
-                    public class TextReplace_
+                    public class C_TextReplace
                     {
                         /// <summary>
                         /// 置換前
@@ -389,7 +389,7 @@ namespace WorldQuakeViewer2
                         /// Config_DisplayからConfigに変換します。
                         /// </summary>
                         /// <param name="from">変換元</param>
-                        public static explicit operator TextReplace_(Config_Display.Data_.Bouyomi_.TextReplace_ from) => new()
+                        public static explicit operator C_TextReplace(Config_Display.C_Data.C_Bouyomi.C_TextReplace from) => new()
                         {
                             OldValue = from.OldValue,
                             NewValue = from.NewValue,
@@ -400,7 +400,7 @@ namespace WorldQuakeViewer2
                     /// Config_DisplayからConfigに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator Bouyomi_(Config_Display.Data_.Bouyomi_ from) => new()
+                    public static explicit operator C_Bouyomi(Config_Display.C_Data.C_Bouyomi from) => new()
                     {
                         Enable = from.Enable,
                         LowerMagLimit = from.LowerMagLimit,
@@ -411,14 +411,14 @@ namespace WorldQuakeViewer2
                         Tone = from.Tone,
                         Volume = from.Volume,
                         Format = from.Format,
-                        TextReplace = from.TextReplace.Select(n => (TextReplace_)n).ToArray()
+                        TextReplace = [.. from.TextReplace.Select(n => (C_TextReplace)n)]
                     };
                 }
 
                 /// <summary>
                 /// socket送信
                 /// </summary>
-                public class Socket_
+                public class C_Socket
                 {
                     /// <summary>
                     /// 有効か
@@ -448,12 +448,12 @@ namespace WorldQuakeViewer2
                     /// <summary>
                     /// 送信する文の置換
                     /// </summary>
-                    public TextReplace_[] TextReplace { get; set; } = new TextReplace_[] { new() };
+                    public C_TextReplace[] TextReplace { get; set; } = [new()];
 
                     /// <summary>
                     /// 送信する文の置換
                     /// </summary>
-                    public class TextReplace_
+                    public class C_TextReplace
                     {
                         /// <summary>
                         /// 置換前
@@ -469,7 +469,7 @@ namespace WorldQuakeViewer2
                         /// Config_DisplayからConfigに変換します。
                         /// </summary>
                         /// <param name="from">変換元</param>
-                        public static explicit operator TextReplace_(Config_Display.Data_.Socket_.TextReplace_ from) => new()
+                        public static explicit operator C_TextReplace(Config_Display.C_Data.C_Socket.C_TextReplace from) => new()
                         {
                             OldValue = from.OldValue,
                             NewValue = from.NewValue,
@@ -480,21 +480,21 @@ namespace WorldQuakeViewer2
                     /// Config_DisplayからConfigに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator Socket_(Config_Display.Data_.Socket_ from) => new()
+                    public static explicit operator C_Socket(Config_Display.C_Data.C_Socket from) => new()
                     {
                         Enable = from.Enable,
                         LowerMagLimit = from.LowerMagLimit,
                         Host = from.Host,
                         Port = from.Port,
                         Format = from.Format,
-                        TextReplace = from.TextReplace.Select(n => (TextReplace_)n).ToArray()
+                        TextReplace = from.TextReplace.Select(n => (C_TextReplace)n).ToArray()
                     };
                 }
 
                 /// <summary>
                 /// webhook送信
                 /// </summary>
-                public class Webhook_
+                public class C_Webhook
                 {
                     /// <summary>
                     /// 有効か
@@ -519,12 +519,12 @@ namespace WorldQuakeViewer2
                     /// <summary>
                     /// 送信する文の置換
                     /// </summary>
-                    public TextReplace_[] TextReplace { get; set; } = new TextReplace_[] { new() { OldValue = "()", NewValue = "" } };
+                    public C_TextReplace[] TextReplace { get; set; } = [new() { OldValue = "()", NewValue = "" }];//または[Author]地震情報[UpdateJP]　{ OldValue = "更新", NewValue = "(更新)" }
 
                     /// <summary>
                     /// 送信する文の置換
                     /// </summary>
-                    public class TextReplace_
+                    public class C_TextReplace
                     {
                         /// <summary>
                         /// 置換前
@@ -540,7 +540,7 @@ namespace WorldQuakeViewer2
                         /// Config_DisplayからConfigに変換します。
                         /// </summary>
                         /// <param name="from">変換元</param>
-                        public static explicit operator TextReplace_(Config_Display.Data_.Webhook_.TextReplace_ from) => new()
+                        public static explicit operator C_TextReplace(Config_Display.C_Data.C_Webhook.C_TextReplace from) => new()
                         {
                             OldValue = from.OldValue,
                             NewValue = from.NewValue,
@@ -551,20 +551,20 @@ namespace WorldQuakeViewer2
                     /// Config_DisplayからConfigに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator Webhook_(Config_Display.Data_.Webhook_ from) => new()
+                    public static explicit operator C_Webhook(Config_Display.C_Data.C_Webhook from) => new()
                     {
                         Enable = from.Enable,
                         LowerMagLimit = from.LowerMagLimit,
                         URL = from.URL,
                         Format = from.Format,
-                        TextReplace = from.TextReplace.Select(n => (TextReplace_)n).ToArray()
+                        TextReplace = from.TextReplace.Select(n => (C_TextReplace)n).ToArray()
                     };
                 }
 
                 /// <summary>
                 /// ログ出力関連(地震)
                 /// </summary>
-                public class LogE_
+                public class C_LogE
                 {
                     /// <summary>
                     /// M4.5未満を有効か
@@ -600,12 +600,12 @@ namespace WorldQuakeViewer2
                     /// <summary>
                     /// 保存する文の置換
                     /// </summary>
-                    public TextReplace_[] TextReplace { get; set; } = new TextReplace_[] { new() { OldValue = "()", NewValue = "" } };
+                    public C_TextReplace[] TextReplace { get; set; } = [new() { OldValue = "()", NewValue = "" }];
 
                     /// <summary>
                     /// 保存する文の置換
                     /// </summary>
-                    public class TextReplace_
+                    public class C_TextReplace
                     {
                         /// <summary>
                         /// 置換前
@@ -621,7 +621,7 @@ namespace WorldQuakeViewer2
                         /// Config_DisplayからConfigに変換します。
                         /// </summary>
                         /// <param name="from">変換元</param>
-                        public static explicit operator TextReplace_(Config_Display.Data_.LogE_.TextReplace_ from) => new()
+                        public static explicit operator C_TextReplace(Config_Display.C_Data.C_LogE.TextReplace_ from) => new()
                         {
                             OldValue = from.OldValue,
                             NewValue = from.NewValue,
@@ -632,7 +632,7 @@ namespace WorldQuakeViewer2
                     /// Config_DisplayからConfigに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator LogE_(Config_Display.Data_.LogE_ from) => new()
+                    public static explicit operator C_LogE(Config_Display.C_Data.C_LogE from) => new()
                     {
                         L1_Enable = from.L1_Enable,
                         L2_Enable = from.L2_Enable,
@@ -640,7 +640,7 @@ namespace WorldQuakeViewer2
                         L4_Enable = from.L4_Enable,
                         L5_Enable = from.L5_Enable,
                         Format = from.Format,
-                        TextReplace = from.TextReplace.Select(n => (TextReplace_)n).ToArray()
+                        TextReplace = from.TextReplace.Select(n => (C_TextReplace)n).ToArray()
                     };
                 }
 
@@ -648,26 +648,26 @@ namespace WorldQuakeViewer2
                 /// Config_DisplayからConfigに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
-                public static explicit operator Data_(Config_Display.Data_ from) => new()
+                public static explicit operator C_Data(Config_Display.C_Data from) => new()
                 {
                     Name = from.Name,
                     URL = from.URL,
                     DataProType = from.DataProType,
                     GetTimes = from.GetTimes,
                     MinObsPoints = from.MinObsPoints,
-                    Update = (Update_)from.Update,
-                    Bouyomi = (Bouyomi_)from.Bouyomi,
-                    Sound = (Sound_)from.Sound,
-                    Socket = (Socket_)from.Socket,
-                    Webhook = (Webhook_)from.Webhook,
-                    LogE = (LogE_)from.LogE
+                    Update = from.Update,
+                    Bouyomi = (C_Bouyomi)from.Bouyomi,
+                    Sound = (C_Sound)from.Sound,
+                    Socket = (C_Socket)from.Socket,
+                    Webhook = (C_Webhook)from.Webhook,
+                    LogE = (C_LogE)from.LogE
                 };
             }
 
             /// <summary>
             /// 表示処理
             /// </summary>
-            public class View_
+            public class C_View
             {
                 /// <summary>
                 /// 表示するデータ
@@ -729,13 +729,13 @@ namespace WorldQuakeViewer2
                 /// 描画色
                 /// </summary>
                 /// <remarks>マップはWorldQuakeViewer.MapGenerator</remarks>
-                public Colors_ Colors { get; set; } = new Colors_();
+                public C_Colors Colors { get; set; } = new C_Colors();
 
                 /// <summary>
                 /// 描画色
                 /// </summary>
                 /// <remarks>マップはWorldQuakeViewer.MapGenerator</remarks>
-                public class Colors_
+                public class C_Colors
                 {
                     /// <summary>
                     /// 最新のタイトル部分のテキスト色
@@ -796,7 +796,7 @@ namespace WorldQuakeViewer2
                     /// Config_DisplayからConfigに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator Colors_(Config_Display.View_.Colors_ from) => new()
+                    public static explicit operator C_Colors(Config_Display.View_.Colors_ from) => new()
                     {
                         Title_Latest_Text_Color = from.Title_Latest_Text_Color,
                         Title_Latest_Back_Color = from.Title_Latest_Back_Color,
@@ -816,7 +816,7 @@ namespace WorldQuakeViewer2
                 /// Config_DisplayからConfigに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
-                public static explicit operator View_(Config_Display.View_ from) => new()
+                public static explicit operator C_View(Config_Display.View_ from) => new()
                 {
                     Data = from.Data,
                     LatestTitleText = from.LatestTitleText,
@@ -829,7 +829,7 @@ namespace WorldQuakeViewer2
                     LockDataViewSize = from.LockDataViewSize,
                     WindowCSize = from.WindowCSize,
                     WCS_AutoCorrect = from.WCS_AutoCorrect,
-                    Colors = (Colors_)from.Colors
+                    Colors = (C_Colors)from.Colors
                 };
             }
 
@@ -839,9 +839,9 @@ namespace WorldQuakeViewer2
             /// <param name="from">変換元</param>
             public static explicit operator Config(Config_Display from) => new()
             {
-                Datas = from.Datas.Select(n => (Data_)n).ToArray(),
-                Views = from.Views.Select(n => (View_)n).ToArray(),
-                Other = (Other_)from.Other
+                Datas = from.Datas.Select(n => (C_Data)n).ToArray(),
+                Views = from.Views.Select(n => (C_View)n).ToArray(),
+                Other = (C_Other)from.Other
             };
         }
 
@@ -849,42 +849,42 @@ namespace WorldQuakeViewer2
         /// 設定表示用クラス
         /// </summary>
         public class Config_Display//Categoryは配列だとできない？
-        {
+        {//todo:description廃止するから継承してなんだかんだできない？
             /// <summary>
             /// 処理するデータ元ごとのデータ処理
             /// </summary>
             [Description("処理するデータ元ごとのデータ処理")]
-            public Data_[] Datas { get; set; }
+            public C_Data[] Datas { get; set; } = [];
 
             /// <summary>
             /// 画面ごとの表示処理
             /// </summary>
             [Description("画面ごとの表示処理")]
-            public View_[] Views { get; set; }
+            public View_[] Views { get; set; } = [];
 
             /// <summary>
             /// その他の設定
             /// </summary>
             [Description("その他")]
-            public Other_ Other { get; set; } = new Other_();
+            public C_Other Other { get; set; } = new C_Other();
 
             /// <summary>
             /// その他の設定
             /// </summary>
             [Description("その他")]
-            public class Other_
+            public class C_Other
             {
                 /// <summary>
                 /// EMSCのQuakeMLのID(UNID)をEMSCのIDに自動で変換するか
                 /// </summary>
                 [Description("EMSCのQuakeMLのID(UNID)をEMSCのIDに自動で変換するか\n詳細ページに飛べるリンクに必要です。処理時間は少し長くなります。")]
-                public bool EMSCqmlIDConv { get; set; }
+                public bool EMSCqmlIDConv { get; set; } = false;
 
                 /// <summary>
                 /// ログ出力関連(地震除く)
                 /// </summary>
                 [Description("ログ出力関連(地震除く)")]
-                public LogN_ LogN { get; set; }
+                public C_LogN LogN { get; set; } = new();
 
                 /// <summary>
                 /// ログ出力関連(地震除く)
@@ -892,7 +892,7 @@ namespace WorldQuakeViewer2
                 [TypeConverter(typeof(ExpandableObjectConverter))]
                 [Category("ログ出力関連")]
                 [Description("ログ出力関連(地震除く)")]
-                public class LogN_
+                public class C_LogN
                 {
                     /// <summary>
                     /// 通常動作ログ出力を有効か
@@ -926,7 +926,7 @@ namespace WorldQuakeViewer2
                     /// ConfigからConfig_Displayに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator LogN_(Config.Other_.LogN_ from) => new()
+                    public static explicit operator C_LogN(Config.C_Other.LogN_ from) => new()
                     {
                         Normal_Enable = from.Normal_Enable,
                         Normal_AutoDelete = from.Normal_AutoDelete,
@@ -939,10 +939,10 @@ namespace WorldQuakeViewer2
                 /// ConfigからConfig_Displayに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
-                public static explicit operator Other_(Config.Other_ from) => new()
+                public static explicit operator C_Other(Config.C_Other from) => new()
                 {
                     EMSCqmlIDConv = from.EMSCqmlIDConv,
-                    LogN = (LogN_)from.LogN
+                    LogN = (C_LogN)from.LogN
                 };
             }
 
@@ -951,159 +951,159 @@ namespace WorldQuakeViewer2
             /// </summary>
             [TypeConverter(typeof(ExpandableObjectConverter))]
             [Description("データ処理関連")]
-            public class Data_
+            public class C_Data
             {
                 /// <summary>
                 /// 取得元
                 /// </summary>
                 [ReadOnly(true)]
                 [Description("取得元(固定)")]
-                public string Name { get; set; }
+                public string Name { get; set; } = "null";
 
                 /// <summary>
                 /// 取得するURL
                 /// </summary>
                 [Description("取得するURL\n更新処理を無効にして、設定後再起動を推奨します。予期しない更新処理が行われる可能性が高いです。")]
-                public string URL { get; set; }
+                public string URL { get; set; } = "null";
 
                 /// <summary>
                 /// データの種類
                 /// </summary>
                 [Description("データの種類\n基本はAutoでいいです。")]
-                public DataProType DataProType { get; set; }
+                public DataProType DataProType { get; set; } = DataProType.Auto;
 
                 /// <summary>
                 /// 取得時間(毎分x秒) -1で無効
                 /// </summary>
                 [Description("取得時間(毎分x秒)\n0~59以外は無視 個数は2個にしてください")]
-                public int[] GetTimes { get; set; }
+                public int[] GetTimes { get; set; } = [-1, -1];
 
                 /// <summary>
                 /// (QuakeMLのみ)必要最小観測点数
                 /// </summary>
                 [Description("(QuakeMLのみ)必要最小観測点数")]
-                public int MinObsPoints { get; set; }
+                public int MinObsPoints { get; set; } = 5;
 
                 /// <summary>
                 /// 更新検知対象
                 /// </summary>
                 [TypeConverter(typeof(ExpandableObjectConverter))]
                 [Description("更新検知対象")]
-                public Update_ Update { get; set; }
+                public Config.C_Data.C_Update Update { get; set; } = new();
 
                 /// <summary>
                 /// 音声再生
                 /// </summary>
                 [TypeConverter(typeof(ExpandableObjectConverter))]
                 [Description("音声再生")]
-                public Sound_ Sound { get; set; }
+                public C_Sound Sound { get; set; } = new();
 
                 /// <summary>
                 /// 棒読みちゃん送信
                 /// </summary>
                 [TypeConverter(typeof(ExpandableObjectConverter))]
                 [Description("棒読みちゃん送信")]
-                public Bouyomi_ Bouyomi { get; set; }
+                public C_Bouyomi Bouyomi { get; set; } = new();
 
                 /// <summary>
                 /// socket送信
                 /// </summary>
                 [TypeConverter(typeof(ExpandableObjectConverter))]
                 [Description("socket送信")]
-                public Socket_ Socket { get; set; }
+                public C_Socket Socket { get; set; } = new();
 
                 /// <summary>
                 /// webhook送信
                 /// </summary
                 [TypeConverter(typeof(ExpandableObjectConverter))]
                 [Description("webhook送信")]
-                public Webhook_ Webhook { get; set; }
+                public C_Webhook Webhook { get; set; } = new();
 
                 /// <summary>
                 /// ログ出力関連(地震)
                 /// </summary>
                 [TypeConverter(typeof(ExpandableObjectConverter))]
                 [Description("ログ出力関連(地震)")]
-                public LogE_ LogE { get; set; }
+                public C_LogE LogE { get; set; } = new();
 
                 /// <summary>
                 /// 更新検知対象
                 /// </summary>
                 [TypeConverter(typeof(ExpandableObjectConverter))]
                 [Description("更新検知対象関連")]
-                public class Update_
+                public class C_Update
                 {
                     /// <summary>
                     /// 更新確認対象期間
                     /// </summary>
                     [Description("更新確認対象期間")]
-                    public TimeSpan MaxPeriod { get; set; }
+                    public TimeSpan MaxPeriod { get; set; } = TimeSpan.FromDays(7);
 
                     /// <summary>
                     /// 発生時刻
                     /// </summary>
                     [Description("発生時刻が変化したとき更新とするか")]
-                    public bool Time { get; set; }
+                    public bool Time { get; set; } = true;
 
                     /// <summary>
                     /// 更新時刻
                     /// </summary>
                     [Description("更新時刻が変化したとき更新とするか")]
-                    public bool UpdtTime { get; set; }
+                    public bool UpdtTime { get; set; } = true;
 
                     /// <summary>
                     /// 震源名
                     /// </summary>
                     [Description("震源名が変化したとき更新とするか")]
-                    public bool Hypo { get; set; }
+                    public bool Hypo { get; set; } = true;
 
                     /// <summary>
                     /// 緯度経度
                     /// </summary>
                     [Description("緯度経度が変化したとき更新とするか")]
-                    public bool LatLon { get; set; }
+                    public bool LatLon { get; set; } = true;
 
                     /// <summary>
                     /// 深さ
                     /// </summary>
                     [Description("深さが変化したとき更新とするか")]
-                    public bool Depth { get; set; }
+                    public bool Depth { get; set; } = true;
 
                     /// <summary>
                     /// マグニチュードの種類
                     /// </summary>
                     [Description("マグニチュードの種類が変化したとき更新とするか")]
-                    public bool MagType { get; set; }
+                    public bool MagType { get; set; } = true;
 
                     /// <summary>
                     /// マグニチュード
                     /// </summary>
                     [Description("マグニチュードが変化したとき更新とするか")]
-                    public bool Mag { get; set; }
+                    public bool Mag { get; set; } = true;
 
                     /// <summary>
                     /// (USGSのみ)改正メルカリ震度階級(ShakeMap)
                     /// </summary>
                     [Description("(USGSのみ)改正メルカリ震度階級(ShakeMap)が変化したとき更新とするか")]
-                    public bool MMI { get; set; }
+                    public bool MMI { get; set; } = true;
 
                     /// <summary>
                     /// (USGSのみ)アラート(PAGER)
                     /// </summary>
                     [Description("(USGSのみ)アラート(PAGER)が変化したとき更新とするか")]
-                    public bool Alert { get; set; }
+                    public bool Alert { get; set; } = true;
 
                     /// <summary>
                     /// (一部のみ)データのソース
                     /// </summary>
                     [Description("(一部のみ)データのソースが変化したとき更新とするか")]
-                    public bool Source { get; set; }
+                    public bool Source { get; set; } = true;
 
                     /// <summary>
                     /// ConfigからConfig_Displayに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator Update_(Config.Data_.Update_ from) => new()
+                    public static explicit operator C_Update(Config.C_Data.C_Update from) => new()
                     {
                         MaxPeriod = from.MaxPeriod,
                         Time = from.Time,
@@ -1124,37 +1124,37 @@ namespace WorldQuakeViewer2
                 /// </summary>
                 [TypeConverter(typeof(ExpandableObjectConverter))]
                 [Description("音声再生関連")]
-                public class Sound_
+                public class C_Sound
                 {
                     /// <summary>
                     /// M4.5未満(初報)の音声ファイルのパス
                     /// </summary>
                     [Description("M4.5未満(初報)の音声ファイルのパス")]
-                    public string L1_Path { get; set; }
+                    public string L1_Path { get; set; } = "Sound\\L1.wav";
 
                     /// <summary>
                     /// M4.5以上M6.0未満(初報)の音声ファイルのパス
                     /// </summary>
                     [Description("M4.5以上M6.0未満(初報)の音声ファイルのパス")]
-                    public string L2_Path { get; set; }
+                    public string L2_Path { get; set; } = "Sound\\L2.wav";
 
                     /// <summary>
                     /// M6.0以上M7.0未満(初報)の音声ファイルのパス
                     /// </summary>
                     [Description("M6.0以上M7.0未満(初報)の音声ファイルのパス")]
-                    public string L3_Path { get; set; }
+                    public string L3_Path { get; set; } = "Sound\\L3.wav";
 
                     /// <summary>
                     /// M7.0以上M8.0未満(初報)の音声ファイルのパス
                     /// </summary>
                     [Description("M7.0以上M8.0未満(初報)の音声ファイルのパス")]
-                    public string L4_Path { get; set; }
+                    public string L4_Path { get; set; } = "Sound\\L4.wav";
 
                     /// <summary>
                     /// M8.0以上(初報)の音声ファイルのパス
                     /// </summary>
                     [Description("M8.0以上(初報)の音声ファイルのパス")]
-                    public string L5_Path { get; set; }
+                    public string L5_Path { get; set; } = "Sound\\L5.wav";
 
                     /// <summary>
                     /// M4.5未満(更新)の音声ファイルのパス
@@ -1190,7 +1190,7 @@ namespace WorldQuakeViewer2
                     /// ConfigからConfig_Displayに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator Sound_(Config.Data_.Sound_ from) => new()
+                    public static explicit operator C_Sound(Config.C_Data.C_Sound from) => new()
                     {
                         L1_Path = from.L1_Path,
                         L2_Path = from.L2_Path,
@@ -1210,92 +1210,92 @@ namespace WorldQuakeViewer2
                 /// </summary>
                 [TypeConverter(typeof(ExpandableObjectConverter))]
                 [Description("棒読みちゃん送信関連")]
-                public class Bouyomi_
+                public class C_Bouyomi
                 {
                     /// <summary>
                     /// 有効か
                     /// </summary>
                     [Description("有効か")]
-                    public bool Enable { get; set; }
+                    public bool Enable { get; set; } = false;
 
                     /// <summary>
                     /// 送信する最小マグニチュード
                     /// </summary>
                     [Description("送信する最小マグニチュード")]
-                    public double LowerMagLimit { get; set; }
+                    public double LowerMagLimit { get; set; } = 5d;
 
                     /// <summary>
                     /// ホスト名
                     /// </summary>
                     [Description("ホスト名(基本変更する必要はありません)")]
-                    public string Host { get; set; }
+                    public string Host { get; set; } = "127.0.0.1";
 
                     /// <summary>
                     /// ポート
                     /// </summary>
                     [Description("ポート(基本変更する必要はありません)")]
-                    public int Port { get; set; }
+                    public int Port { get; set; } = 50001;
 
                     /// <summary>
                     /// 声質
                     /// </summary>
                     [Description("声質\n0:画面上の設定  1:女性1  2:女性2  3:男性1  4:男性2  5:中性  6:ロボット  7:機械1  8:機械2  10001～:SAPI5")]
-                    public short Voice { get; set; }
+                    public short Voice { get; set; } = 0;
 
                     /// <summary>
                     /// 速さ
                     /// </summary>
                     [Description("速さ\n-1で画面上の設定")]
-                    public short Speed { get; set; }
+                    public short Speed { get; set; } = -1;
 
                     /// <summary>
                     /// 音程
                     /// </summary>
                     [Description("音程\n-1で画面上の設定")]
-                    public short Tone { get; set; }
+                    public short Tone { get; set; } = -1;
 
                     /// <summary>
                     /// 音量
                     /// </summary>
                     [Description("音量\n-1で画面上の設定")]
-                    public short Volume { get; set; }
+                    public short Volume { get; set; } = -1;
 
                     /// <summary>
                     /// 送信する文のフォーマット
                     /// </summary>
                     [Description("送信する文のフォーマット\n\\nで改行")]
-                    public string Format { get; set; }
+                    public string Format { get; set; } = "null";
 
                     /// <summary>
                     /// 送信する文の置換
                     /// </summary>
                     [Description("送信する文の置換")]
-                    public TextReplace_[] TextReplace { get; set; }
+                    public C_TextReplace[] TextReplace { get; set; } = [];
 
                     /// <summary>
                     /// 送信する文の置換
                     /// </summary>
                     [TypeConverter(typeof(ExpandableObjectConverter))]
                     [Description("送信する文の置換")]
-                    public class TextReplace_
+                    public class C_TextReplace
                     {
                         /// <summary>
                         /// 置換前
                         /// </summary>
                         [Description("置換前")]
-                        public string OldValue { get; set; }
+                        public string OldValue { get; set; } = "置換前";
 
                         /// <summary>
                         /// 置換後
                         /// </summary>
                         [Description("置換後")]
-                        public string NewValue { get; set; }
+                        public string NewValue { get; set; } = "置換後";
 
                         /// <summary>
                         /// ConfigからConfig_Displayに変換します。
                         /// </summary>
                         /// <param name="from">変換元</param>
-                        public static explicit operator TextReplace_(Config.Data_.Bouyomi_.TextReplace_ from) => new()
+                        public static explicit operator C_TextReplace(Config.C_Data.C_Bouyomi.C_TextReplace from) => new()
                         {
                             OldValue = from.OldValue,
                             NewValue = from.NewValue,
@@ -1306,7 +1306,7 @@ namespace WorldQuakeViewer2
                     /// ConfigからConfig_Displayに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator Bouyomi_(Config.Data_.Bouyomi_ from) => new()
+                    public static explicit operator C_Bouyomi(Config.C_Data.C_Bouyomi from) => new()
                     {
                         Enable = from.Enable,
                         LowerMagLimit = from.LowerMagLimit,
@@ -1317,7 +1317,7 @@ namespace WorldQuakeViewer2
                         Tone = from.Tone,
                         Volume = from.Volume,
                         Format = from.Format,
-                        TextReplace = from.TextReplace.Select(n => (TextReplace_)n).ToArray()
+                        TextReplace = from.TextReplace.Select(n => (C_TextReplace)n).ToArray()
                     };
                 }
 
@@ -1326,68 +1326,68 @@ namespace WorldQuakeViewer2
                 /// </summary>
                 [TypeConverter(typeof(ExpandableObjectConverter))]
                 [Description("socket送信")]
-                public class Socket_
+                public class C_Socket
                 {
                     /// <summary>
                     /// 有効か
                     /// </summary>
                     [Description("有効か")]
-                    public bool Enable { get; set; }
+                    public bool Enable { get; set; } = false;
 
                     /// <summary>
                     /// 送信する最小マグニチュード
                     /// </summary>
                     [Description("送信する最小マグニチュード")]
-                    public double LowerMagLimit { get; set; }
+                    public double LowerMagLimit { get; set; } = 0d;
 
                     /// <summary>
                     /// ホスト名
                     /// </summary>
                     [Description("ホスト名")]
-                    public string Host { get; set; }
+                    public string Host { get; set; } = "null";
 
                     /// <summary>
                     /// ポート
                     /// </summary>
                     [Description("ポート")]
-                    public int Port { get; set; }
+                    public int Port { get; set; } = 0;
 
                     /// <summary>
                     /// 送信する文のフォーマット
                     /// </summary>
                     [Description("送信する文のフォーマット\n\\nで改行")]
-                    public string Format { get; set; }
+                    public string Format { get; set; } = "null";
 
                     /// <summary>
                     /// 送信する文の置換
                     /// </summary>
                     [Description("送信する文の置換")]
-                    public TextReplace_[] TextReplace { get; set; }
+                    public C_TextReplace[] TextReplace { get; set; } = [];
 
                     /// <summary>
                     /// 送信する文の置換
                     /// </summary>
                     [TypeConverter(typeof(ExpandableObjectConverter))]
                     [Description("送信する文の置換")]
-                    public class TextReplace_
+                    public class C_TextReplace
                     {
                         /// <summary>
                         /// 置換前
                         /// </summary>
                         [Description("置換前")]
-                        public string OldValue { get; set; }
+                        public string OldValue { get; set; } = "置換前";
 
                         /// <summary>
                         /// 置換後
                         /// </summary>
                         [Description("置換後")]
-                        public string NewValue { get; set; }
+                        public string NewValue { get; set; } = "置換後";
 
                         /// <summary>
                         /// ConfigからConfig_Displayに変換します。
                         /// </summary>
                         /// <param name="from">変換元</param>
-                        public static explicit operator TextReplace_(Config.Data_.Socket_.TextReplace_ from) => new()
+                        public static explicit operator C_TextReplace(Config.C_Data.C_Socket.C_TextReplace from) => new()
                         {
                             OldValue = from.OldValue,
                             NewValue = from.NewValue,
@@ -1398,14 +1398,14 @@ namespace WorldQuakeViewer2
                     /// ConfigからConfig_Displayに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator Socket_(Config.Data_.Socket_ from) => new()
+                    public static explicit operator C_Socket(Config.C_Data.C_Socket from) => new()
                     {
                         Enable = from.Enable,
                         LowerMagLimit = from.LowerMagLimit,
                         Host = from.Host,
                         Port = from.Port,
                         Format = from.Format,
-                        TextReplace = from.TextReplace.Select(n => (TextReplace_)n).ToArray()
+                        TextReplace = from.TextReplace.Select(n => (C_TextReplace)n).ToArray()
                     };
                 }
 
@@ -1414,7 +1414,7 @@ namespace WorldQuakeViewer2
                 /// </summary>
                 [TypeConverter(typeof(ExpandableObjectConverter))]
                 [Description("webhook送信")]
-                public class Webhook_
+                public class C_Webhook
                 {
                     /// <summary>
                     /// 有効か
@@ -1451,7 +1451,7 @@ namespace WorldQuakeViewer2
                     /// </summary>
                     [TypeConverter(typeof(ExpandableObjectConverter))]
                     [Description("送信する文の置換")]
-                    public class TextReplace_
+                    public class C_TextReplace
                     {
                         /// <summary>
                         /// 置換前
@@ -1469,7 +1469,7 @@ namespace WorldQuakeViewer2
                         /// ConfigからConfig_Displayに変換します。
                         /// </summary>
                         /// <param name="from">変換元</param>
-                        public static explicit operator TextReplace_(Config.Data_.Webhook_.TextReplace_ from) => new()
+                        public static explicit operator C_TextReplace(Config.C_Data.C_Webhook.C_TextReplace from) => new()
                         {
                             OldValue = from.OldValue,
                             NewValue = from.NewValue,
@@ -1480,13 +1480,13 @@ namespace WorldQuakeViewer2
                     /// ConfigからConfig_Displayに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator Webhook_(Config.Data_.Webhook_ from) => new()
+                    public static explicit operator C_Webhook(Config.C_Data.C_Webhook from) => new()
                     {
                         Enable = from.Enable,
                         LowerMagLimit = from.LowerMagLimit,
                         URL = from.URL,
                         Format = from.Format,
-                        TextReplace = from.TextReplace.Select(n => (TextReplace_)n).ToArray()
+                        TextReplace = from.TextReplace.Select(n => (C_TextReplace)n).ToArray()
                     };
                 }
 
@@ -1495,7 +1495,7 @@ namespace WorldQuakeViewer2
                 /// </summary>
                 [TypeConverter(typeof(ExpandableObjectConverter))]
                 [Description("ログ出力関連(地震)")]
-                public class LogE_
+                public class C_LogE
                 {
                     /// <summary>
                     /// M4.5未満を有効か
@@ -1563,7 +1563,7 @@ namespace WorldQuakeViewer2
                         /// ConfigからConfig_Displayに変換します。
                         /// </summary>
                         /// <param name="from">変換元</param>
-                        public static explicit operator TextReplace_(Config.Data_.LogE_.TextReplace_ from) => new()
+                        public static explicit operator TextReplace_(Config.C_Data.C_LogE.C_TextReplace from) => new()
                         {
                             OldValue = from.OldValue,
                             NewValue = from.NewValue,
@@ -1574,7 +1574,7 @@ namespace WorldQuakeViewer2
                     /// ConfigからConfig_Displayに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator LogE_(Config.Data_.LogE_ from) => new()
+                    public static explicit operator C_LogE(Config.C_Data.C_LogE from) => new()
                     {
                         L1_Enable = from.L1_Enable,
                         L2_Enable = from.L2_Enable,
@@ -1590,19 +1590,19 @@ namespace WorldQuakeViewer2
                 /// ConfigからConfig_Displayに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
-                public static explicit operator Data_(Config.Data_ from) => new()
+                public static explicit operator C_Data(Config.C_Data from) => new()
                 {
                     Name = from.Name,
                     URL = from.URL,
                     DataProType = from.DataProType,
                     GetTimes = from.GetTimes,
                     MinObsPoints = from.MinObsPoints,
-                    Update = (Update_)from.Update,
+                    Update = (C_Update)from.Update,
                     Bouyomi = (Bouyomi_)from.Bouyomi,
-                    Sound = (Sound_)from.Sound,
-                    Socket = (Socket_)from.Socket,
-                    Webhook = (Webhook_)from.Webhook,
-                    LogE = (LogE_)from.LogE
+                    Sound = (C_Sound)from.Sound,
+                    Socket = (C_Socket)from.Socket,
+                    Webhook = (C_Webhook)from.Webhook,
+                    LogE = (C_LogE)from.LogE
                 };
             }
 
@@ -1765,7 +1765,7 @@ namespace WorldQuakeViewer2
                     /// ConfigからConfig_Displayに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator Colors_(Config.View_.Colors_ from) => new()
+                    public static explicit operator Colors_(Config.C_View.C_Colors from) => new()
                     {
                         Title_Latest_Text_Color = from.Title_Latest_Text_Color,
                         Title_Latest_Back_Color = from.Title_Latest_Back_Color,
@@ -1785,7 +1785,7 @@ namespace WorldQuakeViewer2
                 /// ConfigからConfig_Displayに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
-                public static explicit operator View_(Config.View_ from) => new()
+                public static explicit operator View_(Config.C_View from) => new()
                 {
                     Data = from.Data,
                     LatestTitleText = from.LatestTitleText,
@@ -1808,9 +1808,9 @@ namespace WorldQuakeViewer2
             /// <param name="from">変換元</param>
             public static explicit operator Config_Display(Config from) => new()
             {
-                Datas = from.Datas.Select(n => (Data_)n).ToArray(),
+                Datas = from.Datas.Select(n => (C_Data)n).ToArray(),
                 Views = from.Views.Select(n => (View_)n).ToArray(),
-                Other = (Other_)from.Other
+                Other = (C_Other)from.Other
             };
         }
 
@@ -1832,7 +1832,7 @@ namespace WorldQuakeViewer2
             /// <summary>
             /// 表示処理
             /// </summary>
-            public Config.View_ View { get; set; } = new Config.View_();
+            public Config.C_View View { get; set; } = new Config.C_View();
 
             /// <summary>
             /// PastConfig_DisplayからPastConfigに変換します。
@@ -1842,7 +1842,7 @@ namespace WorldQuakeViewer2
             {
                 URL = from.URL,
                 ProType = from.ProType,
-                View = (Config.View_)from.View
+                View = (Config.C_View)from.View
             };
         }
 

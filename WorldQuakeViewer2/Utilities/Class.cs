@@ -18,7 +18,7 @@
         /// <summary>
         /// データ元の個数(null等除く)
         /// </summary>
-        public static readonly int DataAuthorCount = Enum.GetValues(typeof(DataAuthor)).Length - 2;
+        public static readonly int DataAuthorCount = Enum.GetValues<DataAuthor>().Length - 2;
 
         /// <summary>
         /// データ元別既定のURL

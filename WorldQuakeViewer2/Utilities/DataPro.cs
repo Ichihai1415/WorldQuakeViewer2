@@ -87,7 +87,7 @@ namespace WorldQuakeViewer2
         public static Task Get_Text(string res, Dictionary<string, Data> data_tmp, DataAuthor dataAuthor)
         {
             ExeLog($"[Get_Text][{dataAuthor}]処理中...");
-            Config.Data_ config_data = config.Datas[(int)dataAuthor];
+            Config.C_Data config_data = config.Datas[(int)dataAuthor];
             string[] datas = res.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Skip(1).ToArray();
             int maxLevel = 0;
             bool isUpdateSound = true;
@@ -152,7 +152,7 @@ namespace WorldQuakeViewer2
         public static async Task Get_QuakeML(string res, Dictionary<string, Data> data_tmp, DataAuthor dataAuthor)
         {
             ExeLog($"[Get_QuakeML][{dataAuthor}]処理中...");
-            Config.Data_ config_data = config.Datas[(int)dataAuthor];
+            Config.C_Data config_data = config.Datas[(int)dataAuthor];
             XmlDocument xml = new();
             xml.LoadXml(res);
             XmlNamespaceManager ns = new(xml.NameTable);
@@ -237,7 +237,7 @@ namespace WorldQuakeViewer2
         public static Task Get_GeoJSON(string res, Dictionary<string, Data> data_tmp, DataAuthor dataAuthor)
         {
             ExeLog($"[Get_GeoJSON][{dataAuthor}]処理中...");
-            Config.Data_ config_data = config.Datas[(int)dataAuthor];
+            Config.C_Data config_data = config.Datas[(int)dataAuthor];
             JObject json = JObject.Parse(res);
             int maxLevel = 0;
             bool isUpdateSound = true;

@@ -141,7 +141,7 @@ namespace WorldQuakeViewer2
                 .Replace("[UpdateJP]", f.UpdateJP).Replace("[UpdateEN]", f.UpdateEN)
                 .Replace("[dataJSON]", JsonConvert.SerializeObject(data))
                 .Replace("[formatJSON]", JsonConvert.SerializeObject(f));
-            foreach (Config.Data_.LogE_.TextReplace_ replace in config.Datas[(int)data.Author].LogE.TextReplace)
+            foreach (Config.C_Data.C_LogE.C_TextReplace replace in config.Datas[(int)data.Author].LogE.TextReplace)
                 if (replace.OldValue != "")
                     format = format.Replace(replace.OldValue, replace.NewValue);
             return format;

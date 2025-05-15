@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-using static WorldQuakeViewer.CtrlForm;
-using static WorldQuakeViewer.Util_Class;
-using static WorldQuakeViewer.Util_Conv;
-using static WorldQuakeViewer.Util_Func;
-
-namespace WorldQuakeViewer
+﻿namespace WorldQuakeViewer2
 {
     /// <summary>
     /// データ表示Form
@@ -30,7 +20,7 @@ namespace WorldQuakeViewer
         /// <summary>
         /// ReDrawに使用
         /// </summary>
-        readonly public int dataAuthorN;
+        public readonly int dataAuthorN;
         /// <summary>
         /// 表示するデータ
         /// </summary>
@@ -191,7 +181,7 @@ namespace WorldQuakeViewer
         /// </summary>
         public void Draw(bool configReload = false)
         {
-                Console.WriteLine($"////[{i}]Draw title:{config_view.LatestTitleText}");
+            Console.WriteLine($"////[{i}]Draw title:{config_view.LatestTitleText}");
 
             if (config.Views.Length <= i)//設定2個(表示1)のときindex2番目以降呼び出し禁止
             {
@@ -259,7 +249,7 @@ namespace WorldQuakeViewer
         /// <returns>最新の情報の画像(800x1000)</returns>
         public Bitmap Draw_Latest(Data data)
         {
-            Bitmap latestImg = new Bitmap(800, 1000);
+            Bitmap latestImg = new(800, 1000);
             Graphics g = Graphics.FromImage(latestImg);
             if (data == null)
             {
@@ -313,7 +303,7 @@ namespace WorldQuakeViewer
         public Bitmap Draw_History(List<Data> datas, Bitmap latestImage = null)
         {
             int w = latestImage == null ? 0 : 800;
-            Bitmap histImg = new Bitmap(800 + w, 1000);
+            Bitmap histImg = new(800 + w, 1000);
             Graphics g = Graphics.FromImage(histImg);
             if (w != 0)
                 g.DrawImage(latestImage, 0, 0);
@@ -358,7 +348,7 @@ namespace WorldQuakeViewer
         {
             if (datas == null)
             {
-                Bitmap histImg_ = new Bitmap(800, 200);
+                Bitmap histImg_ = new(800, 200);
                 Graphics g_ = Graphics.FromImage(histImg_);
 
                 g_.FillRectangle(new SolidBrush(config_view.Colors.Title_Latest_Back_Color), 0, 0, 800, 200);
@@ -400,7 +390,7 @@ namespace WorldQuakeViewer
                 return Draw_AllLatestMulti(null);
             }
             int h = 200 * latests.Count();
-            Bitmap histImg = new Bitmap(800, h);
+            Bitmap histImg = new(800, h);
             Graphics g = Graphics.FromImage(histImg);
 
             g.FillRectangle(new SolidBrush(config_view.Colors.Title_Latest_Back_Color), 0, 0, 800, h);
