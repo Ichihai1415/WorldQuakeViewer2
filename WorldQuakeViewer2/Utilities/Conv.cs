@@ -1,24 +1,11 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Drawing;
-using System.Linq;
-using System.Net.Http;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Text.RegularExpressions;
 using System.Xml;
 using static LL2FERC.LL2FERC;
-using static WorldQuakeViewer.CtrlForm;
-using static WorldQuakeViewer.Util_Class;
-using static WorldQuakeViewer.Util_Func;
 
-namespace WorldQuakeViewer
+namespace WorldQuakeViewer2
 {
-    /// <summary>
-    /// 色々
-    /// </summary>
-    public class Util_Conv
+    /// <inheritdoc/>
+    internal partial class Utilities
     {
         /// <summary>
         /// マグニチュードからレベルに変換します。
@@ -47,12 +34,12 @@ namespace WorldQuakeViewer
         /// <param name="isNew">新規か</param>
         /// <param name="viewIndex">表示用置換の場合表示インデックス</param>
         /// <returns>各処理の文字列</returns>
-        public static string Data2String(Data data, FormatPros updatePros, bool isNew, int viewIndex = 0)
+        public static string Data2String(Data data, FormatProName updatePros, bool isNew, int viewIndex = 0)
         {
             string format;
             switch (updatePros)
             {
-                case FormatPros.View:
+                case FormatProName.View:
                     if (viewIndex == 0)
                         throw new ArgumentException($"表示インデックス({viewIndex})が不正です。", nameof(viewIndex));
                     else if (viewIndex == -1)
@@ -60,16 +47,16 @@ namespace WorldQuakeViewer
                     else
                         format = config.Views[viewIndex].DisplayTextFormat;
                     break;
-                case FormatPros.Bouyomichan:
+                case FormatProName.BouyomiChan:
                     format = config.Datas[(int)data.Author].Bouyomi.Format;
                     break;
-                case FormatPros.Socket:
+                case FormatProName.Socket:
                     format = config.Datas[(int)data.Author].Socket.Format;
                     break;
-                case FormatPros.Webhook:
+                case FormatProName.Webhook:
                     format = config.Datas[(int)data.Author].Webhook.Format;
                     break;
-                case FormatPros.LogE:
+                case FormatProName.LogE:
                     format = config.Datas[(int)data.Author].LogE.Format;
                     break;
                 default:
@@ -78,7 +65,7 @@ namespace WorldQuakeViewer
             DateTimeOffset timeUser = data.Time.ToLocalTime();
             Lat2String(data.Lat, out string lat10, out string latNS, out string latNSJP, out string lat60d, out string lat60m, out string lat60s);
             Lon2String(data.Lon, out string lon10, out string lonEW, out string lonEWJP, out string lon60d, out string lon60m, out string lon60s);
-            FormatReplaces f = new FormatReplaces
+            FormatReplaces f = new()
             {
                 Author = data.Author.ToString(),
                 ID = data.ID2,

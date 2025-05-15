@@ -3,6 +3,7 @@ using System.Drawing.Imaging;
 using System.Media;
 using System.Text;
 using LL2FERC;
+using static WorldQuakeViewer2.Utilities;
 
 namespace WorldQuakeViewer2
 {
@@ -51,7 +52,7 @@ namespace WorldQuakeViewer2
         /// <summary>
         /// 取得用
         /// </summary>
-        internal static HttpClient client = new HttpClient();
+        internal static HttpClient client = new();
 
         /// <summary>
         /// 音声再生用
@@ -61,7 +62,7 @@ namespace WorldQuakeViewer2
         /// <summary>
         /// 実行ログの高速追加用
         /// </summary>
-        internal static StringBuilder exeLogs = new StringBuilder();
+        internal static StringBuilder exeLogs = new();
 
         /// <summary>
         /// 更新処理の無効

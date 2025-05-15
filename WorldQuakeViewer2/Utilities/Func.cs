@@ -1,25 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
+﻿using System.Drawing.Imaging;
 using System.Media;
-using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
-using System.Windows.Forms;
-using WorldQuakeViewer.Properties;
-using static WorldQuakeViewer.Config;
-using static WorldQuakeViewer.CtrlForm;
-using static WorldQuakeViewer.Util_Class;
-using static WorldQuakeViewer.Util_Conv;
+using WorldQuakeViewer2.Properties;
 
-namespace WorldQuakeViewer
+namespace WorldQuakeViewer2
 {
-    /// <summary>
-    /// 色々
-    /// </summary>
-    public class Util_Func
+    /// <inheritdoc/>
+    internal partial class Utilities
     {
         /// <summary>
         /// 実行ログを保存・表示します。
@@ -234,13 +222,13 @@ namespace WorldQuakeViewer
                 {
                     if (config.Datas[(int)dataAuthor].Bouyomi.Enable)
                         if (data.Mag >= config.Datas[(int)dataAuthor].Bouyomi.LowerMagLimit)
-                            Bouyomichan(Data2String(data, FormatPros.Bouyomichan, isNew), dataAuthor);
+                            BouyomiChan(Data2String(data, FormatProName.BouyomiChan, isNew), dataAuthor);
                     if (config.Datas[(int)dataAuthor].Socket.Enable)
                         if (data.Mag >= config.Datas[(int)dataAuthor].Socket.LowerMagLimit)
-                            Socket(Data2String(data, FormatPros.Socket, isNew), dataAuthor);
+                            Socket(Data2String(data, FormatProName.Socket, isNew), dataAuthor);
                     if (config.Datas[(int)dataAuthor].Webhook.Enable)
                         if (data.Mag >= config.Datas[(int)dataAuthor].Webhook.LowerMagLimit)
-                            Webhook(Data2String(data, FormatPros.Webhook, isNew), dataAuthor);
+                            Webhook(Data2String(data, FormatProName.Webhook, isNew), dataAuthor);
                 }
                 else
                     ExeLog("[UpdatePros]初回または停止中のため地震ログ書き込みのみ");
@@ -354,17 +342,17 @@ namespace WorldQuakeViewer
         /// <remarks>事前に有効確認が必要です。</remarks>
         /// <param name="text">読み上げさせる文</param>
         /// <param name="dataAuthor">データ元</param>
-        public static void Bouyomichan(string text, DataAuthor dataAuthor)
+        public static void BouyomiChan(string text, DataAuthor dataAuthor)
         {
             try
             {
                 Console.WriteLine("棒読みちゃん処理開始");
                 Data_.Bouyomi_ config_bouyomi = config.Datas[(int)dataAuthor].Bouyomi;
                 byte[] message = Encoding.UTF8.GetBytes(text);
-                ExeLog($"[Bouyomichan][{dataAuthor}]棒読みちゃん送信中...");
-                using (TcpClient tcpClient = new TcpClient(config_bouyomi.Host, config_bouyomi.Port))
+                ExeLog($"[BouyomiChan][{dataAuthor}]棒読みちゃん送信中...");
+                using (TcpClient tcpClient = new(config_bouyomi.Host, config_bouyomi.Port))
                 using (NetworkStream networkStream = tcpClient.GetStream())
-                using (BinaryWriter binaryWriter = new BinaryWriter(networkStream))
+                using (BinaryWriter binaryWriter = new(networkStream))
                 {
                     binaryWriter.Write((short)1);
                     binaryWriter.Write(config_bouyomi.Speed);
@@ -375,11 +363,11 @@ namespace WorldQuakeViewer
                     binaryWriter.Write(message.Length);
                     binaryWriter.Write(message);
                 }
-                ExeLog($"[Bouyomichan][{dataAuthor}]棒読みちゃん送信成功");
+                ExeLog($"[BouyomiChan][{dataAuthor}]棒読みちゃん送信成功");
             }
             catch (Exception ex)
             {
-                ExeLog($"[Bouyomichan][{dataAuthor}]エラー:{ex.Message}", true);
+                ExeLog($"[BouyomiChan][{dataAuthor}]エラー:{ex.Message}", true);
                 LogSave(ex);
             }
         }
@@ -399,7 +387,7 @@ namespace WorldQuakeViewer
                 byte[] message = new byte[4096];
                 message = Encoding.UTF8.GetBytes(text);
                 ExeLog($"[Socket][{dataAuthor}]Socket送信中…");
-                using (TcpClient tcpClient = new TcpClient(config_socket.Host, config_socket.Port))
+                using (TcpClient tcpClient = new(config_socket.Host, config_socket.Port))
                 using (NetworkStream networkStream = tcpClient.GetStream())
                     await networkStream.WriteAsync(message, 0, message.Length);
                 ExeLog($"[Socket][{dataAuthor}]Socket送信成功");
@@ -423,7 +411,7 @@ namespace WorldQuakeViewer
             {
                 Console.WriteLine("Webhook処理開始");
                 Data_.Webhook_ config_webhook = config.Datas[(int)dataAuthor].Webhook;
-                Dictionary<string, string> strs = new Dictionary<string, string>()
+                Dictionary<string, string> strs = new()
                 {
                     { "content", text }
                 };
@@ -477,7 +465,7 @@ namespace WorldQuakeViewer
                     ExeLog($"[LogE]保存対象外です。");
                     return;
                 }
-                text = Data2String(data, FormatPros.LogE, isNew);
+                text = Data2String(data, FormatProName.LogE, isNew);
                 LogSave((LogKind)(dataAuthor + 10), text, data.ID);
             }
             catch (Exception ex)

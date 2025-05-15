@@ -1,18 +1,9 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Xml;
-using static WorldQuakeViewer.CtrlForm;
-using static WorldQuakeViewer.Util_Class;
-using static WorldQuakeViewer.Util_Conv;
-using static WorldQuakeViewer.Util_Func;
+﻿using System.Xml;
 
-namespace WorldQuakeViewer
+namespace WorldQuakeViewer2
 {
-    public static class DataPro
+    /// <inheritdoc/>
+    internal partial class Utilities
     {
         /// <summary>
         /// 取得します。
@@ -24,7 +15,7 @@ namespace WorldQuakeViewer
             try
             {
                 ExeLog($"[Get][{dataAuthor}]取得中...");
-                Dictionary<string, Data> data_tmp = new Dictionary<string, Data>();
+                Dictionary<string, Data> data_tmp = new();
                 switch (dataAuthor)
                 {
                     case DataAuthor.Other:
@@ -162,9 +153,9 @@ namespace WorldQuakeViewer
         {
             ExeLog($"[Get_QuakeML][{dataAuthor}]処理中...");
             Config.Data_ config_data = config.Datas[(int)dataAuthor];
-            XmlDocument xml = new XmlDocument();
+            XmlDocument xml = new();
             xml.LoadXml(res);
-            XmlNamespaceManager ns = new XmlNamespaceManager(xml.NameTable);
+            XmlNamespaceManager ns = new(xml.NameTable);
             ns.AddNamespace("qml", "http://quakeml.org/xmlns/bed/1.2");
             ns.AddNamespace("q", "http://quakeml.org/xmlns/quakeml/1.2");
             ns.AddNamespace("qrt", "http://quakeml.org/xmlns/quakeml-rt/1.2");
@@ -349,9 +340,9 @@ namespace WorldQuakeViewer
                         }
                         break;
                     case DataProType.QuakeML:
-                        XmlDocument xml = new XmlDocument();
+                        XmlDocument xml = new();
                         xml.LoadXml(res);
-                        XmlNamespaceManager ns = new XmlNamespaceManager(xml.NameTable);
+                        XmlNamespaceManager ns = new(xml.NameTable);
                         ns.AddNamespace("qml", "http://quakeml.org/xmlns/bed/1.2");
                         ns.AddNamespace("q", "http://quakeml.org/xmlns/quakeml/1.2");
                         ns.AddNamespace("qrt", "http://quakeml.org/xmlns/quakeml-rt/1.2");
