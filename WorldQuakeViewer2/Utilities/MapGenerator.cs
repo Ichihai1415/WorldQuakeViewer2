@@ -1,90 +1,54 @@
-ï»¿using System.Diagnostics;
+using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.IO.Compression;
 using WorldQuakeViewer2.Properties;
-using static WorldQuakeViewer2.Utilities;
 
-namespace WorldQuakeViewer2
+namespace WorldQuakeViewer2.Utilities
 {
-    public partial class MapGen : Form
+    public partial class MapGenerator : Form
     {
-        public MapGen()
+        public MapGenerator()
         {
             InitializeComponent();
         }
 
         private void MagGen_Load(object sender, EventArgs e)
         {
-            try
-            {
-                List<ColorSettingList> colorSettings = new();
-                if (!File.Exists("Setting\\map-color.csv"))
-                    File.WriteAllText("Setting\\map-color.csv", Resources.map_color);
-                Thread.Sleep(10);//â†‘ã®æ›¸ãè¾¼ã¿ãŒé–“ã«åˆã£ã¦ãªãã¦ãŠã‹ã—ã„ã¨ããŒã‚ã‚‹?
-                string[] color_ = File.ReadAllLines("Setting\\map-color.csv");
-                foreach (string color__ in color_)
-                {
-                    string[] color = color__.Split(',');
-                    if (color.Length != 5 || color[0] == "Name")
-                        continue;
-                    ColorSettingList colorSettingList = new()
-                    {
-                        Name = NameConvert[color[0]],
-                        Alpha = int.Parse(color[1]),
-                        Red = int.Parse(color[2]),
-                        Green = int.Parse(color[3]),
-                        Blue = int.Parse(color[4])
-                    };
-                    colorSettings.Add(colorSettingList);
-                }
-                ColorSettingListBindingSource.DataSource = colorSettings;
-            }
-            catch (Exception ex)
-            {
-                ExeLog($"[MagGen_Load]ã‚¨ãƒ©ãƒ¼:{ex.Message}", true);
-                LogSave(ex);
-                if (DialogOK($"è‰²è¨­å®šã®èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸã€‚OKã‚’æŠ¼ã™ã¨ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã—ã¦ãƒªã‚»ãƒƒãƒˆã•ã‚Œã¾ã™ã€‚({ex.Message})", "ã‚¨ãƒ©ãƒ¼", MessageBoxIcon.Error))
-                {
-                    File.Copy("Setting\\map-color.csv", $"Setting\\map-color-backup-{DateTime.Now:yyyyMMddHHmmss}.csv", true);
-                    File.WriteAllText("Setting\\map-color.csv", Resources.map_color);
-                }
-                else
-                    Close();
-            }
         }
 
         public Dictionary<string, string> NameConvert = new()
         {
-            { "ocean", "æµ·" },
-            { "land", "é™¸" },
-            { "land-line", "æµ·å²¸ç·š" },
-            { "plate-convergent", "ãƒ—ãƒ¬ãƒ¼ãƒˆ(åæŸ/æ²ˆã¿è¾¼ã¿)" },
-            { "plate-transform", "ãƒ—ãƒ¬ãƒ¼ãƒˆ(ã™ã‚Œé•ã„)" },
-            { "plate-divergent", "ãƒ—ãƒ¬ãƒ¼ãƒˆ(æ‹¡æ•£/æ‹¡å¤§)" },
-            { "graticules-normal", "ç·¯çµŒç·š(30åº¦ã”ã¨)" },
-            { "graticules-lat", "ç·¯ç·š(90åº¦ã”ã¨)" },
-            { "graticules-lon1", "çµŒç·š(90åº¦ã”ã¨)" },
-            { "graticules-lon2", "çµŒç·š(180åº¦ã”ã¨)" }
+            { "ocean", "ŠC" },
+            { "land", "—¤" },
+            { "land-line", "ŠCŠİü" },
+            { "plate-convergent", "ƒvƒŒ[ƒg(û‘©/’¾‚İ‚İ)" },
+            { "plate-transform", "ƒvƒŒ[ƒg(‚·‚êˆá‚¢)" },
+            { "plate-divergent", "ƒvƒŒ[ƒg(ŠgU/Šg‘å)" },
+            { "graticules-normal", "ˆÜŒoü(30“x‚²‚Æ)" },
+            { "graticules-lat", "ˆÜü(90“x‚²‚Æ)" },
+            { "graticules-lon1", "Œoü(90“x‚²‚Æ)" },
+            { "graticules-lon2", "Œoü(180“x‚²‚Æ)" }
         };
 
         public Dictionary<string, string> NameConvertReverse = new()
         {
-            { "æµ·", "ocean" },
-            { "é™¸", "land" },
-            { "æµ·å²¸ç·š", "land-line" },
-            { "ãƒ—ãƒ¬ãƒ¼ãƒˆ(åæŸ/æ²ˆã¿è¾¼ã¿)", "plate-convergent" },
-            { "ãƒ—ãƒ¬ãƒ¼ãƒˆ(ã™ã‚Œé•ã„)", "plate-transform" },
-            { "ãƒ—ãƒ¬ãƒ¼ãƒˆ(æ‹¡æ•£/æ‹¡å¤§)", "plate-divergent" },
-            { "ç·¯çµŒç·š(30åº¦ã”ã¨)", "graticules-normal" },
-            { "ç·¯ç·š(90åº¦ã”ã¨)", "graticules-lat" },
-            { "çµŒç·š(90åº¦ã”ã¨)", "graticules-lon1" },
-            { "çµŒç·š(180åº¦ã”ã¨)", "graticules-lon2" }
+            { "ŠC", "ocean" },
+            { "—¤", "land" },
+            { "ŠCŠİü", "land-line" },
+            { "ƒvƒŒ[ƒg(û‘©/’¾‚İ‚İ)", "plate-convergent" },
+            { "ƒvƒŒ[ƒg(‚·‚êˆá‚¢)", "plate-transform" },
+            { "ƒvƒŒ[ƒg(ŠgU/Šg‘å)", "plate-divergent" },
+            { "ˆÜŒoü(30“x‚²‚Æ)", "graticules-normal" },
+            { "ˆÜü(90“x‚²‚Æ)", "graticules-lat" },
+            { "Œoü(90“x‚²‚Æ)", "graticules-lon1" },
+            { "Œoü(180“x‚²‚Æ)", "graticules-lon2" }
         };
 
         private void ColorSetting_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.Cancel = false;
-            MessageBox.Show("ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸã€‚å€¤ã‚’ç¢ºèªã—ã¦ãã ã•ã„ã€‚\n" + e.Exception.Message, "WQV - map", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("ƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½B’l‚ğŠm”F‚µ‚Ä‚­‚¾‚³‚¢B\n" + e.Exception.Message, "WQV - map", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void ColorSetting_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
@@ -92,7 +56,7 @@ namespace WorldQuakeViewer2
             int.TryParse(e.FormattedValue.ToString(), out int value);
             if (value < 0 || value > 255)
             {
-                MessageBox.Show("å€¤ã¯0ã‹ã‚‰255ã®é–“ã§ã‚ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚", "WQV - map", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("’l‚Í0‚©‚ç255‚ÌŠÔ‚Å‚ ‚é•K—v‚ª‚ ‚è‚Ü‚·B", "WQV - map", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 e.Cancel = true;
             }
         }
@@ -109,13 +73,13 @@ namespace WorldQuakeViewer2
 
         Bitmap Map;
 
-        private async void Draw_Click(object sender, EventArgs e)//todo:asyncã‚’ã©ã†ã«ã‹ã™ã‚‹
+        private async void Draw_Click(object sender, EventArgs e)//todo:async‚ğ‚Ç‚¤‚É‚©‚·‚é
         {
             try
             {
                 Map = new Bitmap(5400, 1800);
-                Text2.Text = "csvä¿å­˜ä¸­â€¦";
-                await Task.Delay(1);//ã“ã‚ŒãŒã‚ã‚‹ã¨æ–‡å­—ãŒã¡ã‚ƒã‚“ã¨å¤‰ã‚ã‚‹
+                Text2.Text = "csv•Û‘¶’†c";
+                await Task.Delay(1);//‚±‚ê‚ª‚ ‚é‚Æ•¶š‚ª‚¿‚á‚ñ‚Æ•Ï‚í‚é
                 string csv = "Name,Alpha,Red,Green,Blue\n";
                 int[,] colors = new int[10, 4];
                 int i = 0;
@@ -142,7 +106,7 @@ namespace WorldQuakeViewer2
                 Color col_gla = Color.FromArgb(colors[7, 0], colors[7, 1], colors[7, 2], colors[7, 3]);
                 Color col_glo = Color.FromArgb(colors[8, 0], colors[8, 1], colors[8, 2], colors[8, 3]);
                 Color col_gln = Color.FromArgb(colors[9, 0], colors[9, 1], colors[9, 2], colors[9, 3]);
-                /*æ—¢å®š
+                /*Šù’è
                 ocean,255,30,30,60
                 land,255,100,100,150
                 land-line,50,255,255,255
@@ -157,14 +121,14 @@ namespace WorldQuakeViewer2
 
                 if (!File.Exists("Resources\\ne_50m_land.json"))
                 {
-                    Text2.Text = "ãƒ‡ãƒ¼ã‚¿ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ä¸­â€¦";
+                    Text2.Text = "ƒf[ƒ^ƒ_ƒEƒ“ƒ[ƒh’†c";
                     await Task.Delay(1);
                     string json_ = await client.GetStringAsync("https://raw.githubusercontent.com/Ichihai1415/WorldQuakeViewer/main/Resources/ne_50m_land.json");
                     Directory.CreateDirectory("Resources");
                     File.WriteAllText("Resources\\ne_50m_land.json", json_);
                     json_ = "";
                 }
-                Text2.Text = "åœ°å›³æç”»ä¸­â€¦";
+                Text2.Text = "’n}•`‰æ’†c";
                 await Task.Delay(1);
                 JObject json = JObject.Parse(File.ReadAllText("Resources\\ne_50m_land.json"));
                 Bitmap baseMap = new(3600, 1800);
@@ -198,14 +162,14 @@ namespace WorldQuakeViewer2
                 }
                 if (!File.Exists("Resources\\PB2002_steps.json"))
                 {
-                    Text2.Text = "ãƒ‡ãƒ¼ã‚¿ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ä¸­â€¦";
+                    Text2.Text = "ƒf[ƒ^ƒ_ƒEƒ“ƒ[ƒh’†c";
                     await Task.Delay(1);
                     string json_ = await client.GetStringAsync("https://raw.githubusercontent.com/Ichihai1415/WorldQuakeViewer/main/Resources/PB2002_steps.json");
                     Directory.CreateDirectory("Resources");
                     File.WriteAllText("Resources\\PB2002_steps.json", json_);
                     json_ = "";
                 }
-                Text2.Text = "ãƒ—ãƒ¬ãƒ¼ãƒˆå¢ƒç•Œæç”»ä¸­â€¦";
+                Text2.Text = "ƒvƒŒ[ƒg‹«ŠE•`‰æ’†c";
                 await Task.Delay(1);
                 json = JObject.Parse(File.ReadAllText("Resources\\PB2002_steps.json"));
                 foreach (JToken json_1 in json.SelectToken("features"))
@@ -216,55 +180,59 @@ namespace WorldQuakeViewer2
                     string type = (string)json_1.SelectToken("properties.STEPCLASS");
                     switch (type)
                     {
-                        case "SUB"://åæŸå¢ƒç•Œ
-                            g.DrawLines(new Pen(col_p_c, 2), points.ToArray());//ä¸€ã¤ãšã¤ã‚„ã‚‰ãªã„ã¨ãŠã‹ã—ããªã‚‹?
+                        case "SUB"://û‘©‹«ŠE
+                            g.DrawLines(new Pen(col_p_c, 2), points.ToArray());//ˆê‚Â‚¸‚Â‚â‚ç‚È‚¢‚Æ‚¨‚©‚µ‚­‚È‚é?
                             break;
-                        case "OSR"://æµ·æ´‹æ‹¡å¤§å¢ƒç•Œ
+                        case "OSR"://ŠC—mŠg‘å‹«ŠE
                             g.DrawLines(new Pen(col_p_d, 2), points.ToArray());
                             break;
-                        case "OTF"://æµ·æ´‹ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ æ–­å±¤
+                        case "OTF"://ŠC—mƒgƒ‰ƒ“ƒXƒtƒH[ƒ€’f‘w
                             g.DrawLines(new Pen(col_p_t, 2), points.ToArray());
                             break;
-                        case "OCB"://æµ·æ´‹åæŸå¢ƒç•Œ
+                        case "OCB"://ŠC—mû‘©‹«ŠE
                             g.DrawLines(new Pen(col_p_c, 2), points.ToArray());
                             break;
-                        case "CRB"://å¤§é™¸æ‹¡å¤§å¢ƒç•Œ
+                        case "CRB"://‘å—¤Šg‘å‹«ŠE
                             g.DrawLines(new Pen(col_p_d, 2), points.ToArray());
                             break;
-                        case "CTF"://å¤§é™¸ãƒˆãƒ©ãƒ³ã‚¹ãƒ•ã‚©ãƒ¼ãƒ æ–­å±¤
+                        case "CTF"://‘å—¤ƒgƒ‰ƒ“ƒXƒtƒH[ƒ€’f‘w
                             g.DrawLines(new Pen(col_p_t, 2), points.ToArray());
                             break;
-                        case "CCB"://å¤§é™¸åæŸå¢ƒç•Œ
+                        case "CCB"://‘å—¤û‘©‹«ŠE
                             g.DrawLines(new Pen(col_p_c, 2), points.ToArray());
                             break;
                     }
                 }
 
-                Text2.Text = "ç·¯çµŒç·šæç”»ä¸­â€¦";
+                Text2.Text = "ˆÜŒoü•`‰æ’†c";
                 await Task.Delay(1);
                 Pen border = new(col_g_n, 4);
                 Pen border_lon1 = new(col_glo, 4);
                 Pen border_lon2 = new(col_gln, 8);
                 Pen border_lat2 = new(col_gla, 8);
-                for (int x = 0; x <= 3600; x += 300)
+                for (int x = 0; x <= 3600; x += 100)
                 {
-                    if (x == 0 || x == 1800 || x == 3600)
+                    if (x % 1800 == 0)//180
                         g.DrawLine(border_lon2, x, 0, x, 1800);
-                    else if (x == 900 || x == 2700)
+                    else if (x % 900 == 0)//90
                         g.DrawLine(border_lon1, x, 0, x, 1800);
-                    else
+                    else if (x % 300 == 0)//30
+                        g.DrawLine(border, x, 0, x, 1800);
+                    else//10
                         g.DrawLine(border, x, 0, x, 1800);
                 }
                 for (int y = 0; y <= 1800; y += 300)
                 {
-                    if (y == 900)
+                    if (y == 900)//Ô“¹
                         g.DrawLine(border_lat2, 0, y, 3600, y);
-                    else
+                    else if (y % 300 == 0)//30
+                        g.DrawLine(border, 0, y, 3600, y);
+                    else//10
                         g.DrawLine(border, 0, y, 3600, y);
                 }
                 g.Dispose();
 
-                Text2.Text = "ç”»åƒæº–å‚™ä¸­â€¦";
+                Text2.Text = "‰æ‘œ€”õ’†c";
                 await Task.Delay(1);
                 Graphics copyG = Graphics.FromImage(Map);
                 copyG.DrawImage(baseMap, -900, 0);
@@ -276,9 +244,9 @@ namespace WorldQuakeViewer2
             }
             catch (Exception ex)
             {
-                ExeLog($"[Draw_Click]ã‚¨ãƒ©ãƒ¼:{ex.Message}", true);
+                ExeLog($"[Draw_Click]ƒGƒ‰[:{ex.Message}", true);
                 LogSave(ex);
-                MessageBox.Show("ç”»åƒã®æç”»ã«å¤±æ•—ã—ã¾ã—ãŸã€‚" + ex.Message, "ã‚¨ãƒ©ãƒ¼", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("‰æ‘œ‚Ì•`‰æ‚É¸”s‚µ‚Ü‚µ‚½B" + ex.Message, "ƒGƒ‰[", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -289,21 +257,23 @@ namespace WorldQuakeViewer2
 
         private void Reset_Click(object sender, EventArgs e)
         {
-            if (DialogOK("ãƒªã‚»ãƒƒãƒˆã—ã¦ã‚‚ã‚ˆã‚ã—ã„ã§ã™ã‹ï¼Ÿ\nãƒªã‚»ãƒƒãƒˆã™ã‚‹ã¨ã“ã®ç”»é¢ã‚’é–‹ãç›´ã—ã¾ã™"))
+            if (DialogOK("ƒŠƒZƒbƒg‚µ‚Ä‚à‚æ‚ë‚µ‚¢‚Å‚·‚©H\nƒŠƒZƒbƒg‚·‚é‚Æ‚±‚Ì‰æ–Ê‚ğŠJ‚«’¼‚µ‚Ü‚·"))
             {
                 File.WriteAllText("Setting\\map-color.csv", Resources.map_color);
-                new MapGen().Show();
+                new MapGenerator().Show();
                 Close();
             }
         }
-    }
 
-    public class ColorSettingList
-    {
-        public string Name { get; set; }
-        public int Alpha { get; set; }
-        public int Red { get; set; }
-        public int Green { get; set; }
-        public int Blue { get; set; }
+        private void MapGenerator_Load(object sender, EventArgs e)
+        {
+            if (!File.Exists("Resources\\PB2002_steps.geojson"))
+            {
+                File.WriteAllBytes("$temp.PB2002_steps.geojson.zip", Resources.PB2002_steps_geojson_zip);
+                ZipFile.ExtractToDirectory("$temp.PB2002_steps.geojson.zip", "Resources");
+                File.Delete("$temp.PB2002_steps.geojson.zip");
+            }
+        }
     }
 }
+

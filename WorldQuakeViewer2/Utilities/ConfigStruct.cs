@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
+using static WorldQuakeViewer2.Utilities.Utilities.Config.C_Data.C_Bouyomi;
 
-namespace WorldQuakeViewer2
+namespace WorldQuakeViewer2.Utilities
 {
     /// <inheritdoc/>
     public partial class Utilities
@@ -48,12 +49,12 @@ namespace WorldQuakeViewer2
                 /// <summary>
                 /// ログ出力関連(地震除く)
                 /// </summary>
-                public LogN_ LogN { get; set; } = new LogN_();
+                public C_LogN LogN { get; set; } = new C_LogN();
 
                 /// <summary>
                 /// ログ出力関連(地震除く)
                 /// </summary>
-                public class LogN_
+                public class C_LogN
                 {
                     /// <summary>
                     /// 通常動作ログ出力を有効か
@@ -79,7 +80,7 @@ namespace WorldQuakeViewer2
                     /// Config_DisplayからConfigに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator LogN_(Config_Display.C_Other.C_LogN from) => new()
+                    public static explicit operator C_LogN(Config_Display.C_Other.C_LogN from) => new()
                     {
                         Normal_Enable = from.Normal_Enable,
                         Normal_AutoDelete = from.Normal_AutoDelete,
@@ -95,7 +96,7 @@ namespace WorldQuakeViewer2
                 public static explicit operator C_Other(Config_Display.C_Other from) => new()
                 {
                     EMSCqmlIDConv = from.EMSCqmlIDConv,
-                    LogN = (LogN_)from.LogN
+                    LogN = (C_LogN)from.LogN
                 };
             }
 
@@ -621,7 +622,7 @@ namespace WorldQuakeViewer2
                         /// Config_DisplayからConfigに変換します。
                         /// </summary>
                         /// <param name="from">変換元</param>
-                        public static explicit operator C_TextReplace(Config_Display.C_Data.C_LogE.TextReplace_ from) => new()
+                        public static explicit operator C_TextReplace(Config_Display.C_Data.C_LogE.C_TextReplace from) => new()
                         {
                             OldValue = from.OldValue,
                             NewValue = from.NewValue,
@@ -796,7 +797,7 @@ namespace WorldQuakeViewer2
                     /// Config_DisplayからConfigに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator C_Colors(Config_Display.View_.Colors_ from) => new()
+                    public static explicit operator C_Colors(Config_Display.C_View.C_Colors from) => new()
                     {
                         Title_Latest_Text_Color = from.Title_Latest_Text_Color,
                         Title_Latest_Back_Color = from.Title_Latest_Back_Color,
@@ -816,7 +817,7 @@ namespace WorldQuakeViewer2
                 /// Config_DisplayからConfigに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
-                public static explicit operator C_View(Config_Display.View_ from) => new()
+                public static explicit operator C_View(Config_Display.C_View from) => new()
                 {
                     Data = from.Data,
                     LatestTitleText = from.LatestTitleText,
@@ -860,7 +861,7 @@ namespace WorldQuakeViewer2
             /// 画面ごとの表示処理
             /// </summary>
             [Description("画面ごとの表示処理")]
-            public View_[] Views { get; set; } = [];
+            public C_View[] Views { get; set; } = [];
 
             /// <summary>
             /// その他の設定
@@ -926,7 +927,7 @@ namespace WorldQuakeViewer2
                     /// ConfigからConfig_Displayに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator C_LogN(Config.C_Other.LogN_ from) => new()
+                    public static explicit operator C_LogN(Config.C_Other.C_LogN from) => new()
                     {
                         Normal_Enable = from.Normal_Enable,
                         Normal_AutoDelete = from.Normal_AutoDelete,
@@ -1444,7 +1445,7 @@ namespace WorldQuakeViewer2
                     /// 送信する文の置換
                     /// </summary>
                     [Description("送信する文の置換")]
-                    public TextReplace_[] TextReplace { get; set; }
+                    public C_TextReplace[] TextReplace { get; set; }
 
                     /// <summary>
                     /// 送信する文の置換
@@ -1538,14 +1539,14 @@ namespace WorldQuakeViewer2
                     /// 保存する文の置換
                     /// </summary>
                     [Description("送信する文の置換")]
-                    public TextReplace_[] TextReplace { get; set; }
+                    public C_TextReplace[] TextReplace { get; set; }
 
                     /// <summary>
                     /// 保存する文の置換
                     /// </summary>
                     [TypeConverter(typeof(ExpandableObjectConverter))]
                     [Description("送信する文の置換")]
-                    public class TextReplace_
+                    public class C_TextReplace
                     {
                         /// <summary>
                         /// 置換前
@@ -1563,7 +1564,7 @@ namespace WorldQuakeViewer2
                         /// ConfigからConfig_Displayに変換します。
                         /// </summary>
                         /// <param name="from">変換元</param>
-                        public static explicit operator TextReplace_(Config.C_Data.C_LogE.C_TextReplace from) => new()
+                        public static explicit operator C_TextReplace(Config.C_Data.C_LogE.C_TextReplace from) => new()
                         {
                             OldValue = from.OldValue,
                             NewValue = from.NewValue,
@@ -1582,7 +1583,7 @@ namespace WorldQuakeViewer2
                         L4_Enable = from.L4_Enable,
                         L5_Enable = from.L5_Enable,
                         Format = from.Format,
-                        TextReplace = from.TextReplace.Select(n => (TextReplace_)n).ToArray()
+                        TextReplace = from.TextReplace.Select(n => (C_TextReplace)n).ToArray()
                     };
                 }
 
@@ -1598,7 +1599,7 @@ namespace WorldQuakeViewer2
                     GetTimes = from.GetTimes,
                     MinObsPoints = from.MinObsPoints,
                     Update = (C_Update)from.Update,
-                    Bouyomi = (Bouyomi_)from.Bouyomi,
+                    Bouyomi = (C_Bouyomi)from.Bouyomi,
                     Sound = (C_Sound)from.Sound,
                     Socket = (C_Socket)from.Socket,
                     Webhook = (C_Webhook)from.Webhook,
@@ -1611,7 +1612,7 @@ namespace WorldQuakeViewer2
             /// </summary>
             [TypeConverter(typeof(ExpandableObjectConverter))]
             [Description("表示処理関連")]
-            public class View_
+            public class C_View
             {
                 /// <summary>
                 /// 表示するデータ
@@ -1685,7 +1686,7 @@ namespace WorldQuakeViewer2
                 /// </summary>
                 /// <remarks>マップはWorldQuakeViewer.MapGenerator</remarks>
                 [Description("描画色\nマップはWorldQuakeViewer.MapGenerator.exeで")]
-                public Colors_ Colors { get; set; }
+                public C_Colors Colors { get; set; }
 
                 /// <summary>
                 /// 描画色
@@ -1693,7 +1694,7 @@ namespace WorldQuakeViewer2
                 /// <remarks>マップはWorldQuakeViewer.MapGenerator</remarks>
                 [TypeConverter(typeof(ExpandableObjectConverter))]
                 [Description("描画色関連\nマップはWorldQuakeViewer.MapGenerator.exeで")]
-                public class Colors_
+                public class C_Colors
                 {
                     /// <summary>
                     /// 最新のタイトル部分のテキスト色
@@ -1765,7 +1766,7 @@ namespace WorldQuakeViewer2
                     /// ConfigからConfig_Displayに変換します。
                     /// </summary>
                     /// <param name="from">変換元</param>
-                    public static explicit operator Colors_(Config.C_View.C_Colors from) => new()
+                    public static explicit operator C_Colors(Config.C_View.C_Colors from) => new()
                     {
                         Title_Latest_Text_Color = from.Title_Latest_Text_Color,
                         Title_Latest_Back_Color = from.Title_Latest_Back_Color,
@@ -1785,7 +1786,7 @@ namespace WorldQuakeViewer2
                 /// ConfigからConfig_Displayに変換します。
                 /// </summary>
                 /// <param name="from">変換元</param>
-                public static explicit operator View_(Config.C_View from) => new()
+                public static explicit operator C_View(Config.C_View from) => new()
                 {
                     Data = from.Data,
                     LatestTitleText = from.LatestTitleText,
@@ -1798,7 +1799,7 @@ namespace WorldQuakeViewer2
                     LockDataViewSize = from.LockDataViewSize,
                     WindowCSize = from.WindowCSize,
                     WCS_AutoCorrect = from.WCS_AutoCorrect,
-                    Colors = (Colors_)from.Colors
+                    Colors = (C_Colors)from.Colors
                 };
             }
 
@@ -1809,7 +1810,7 @@ namespace WorldQuakeViewer2
             public static explicit operator Config_Display(Config from) => new()
             {
                 Datas = from.Datas.Select(n => (C_Data)n).ToArray(),
-                Views = from.Views.Select(n => (View_)n).ToArray(),
+                Views = from.Views.Select(n => (C_View)n).ToArray(),
                 Other = (C_Other)from.Other
             };
         }
@@ -1867,7 +1868,7 @@ namespace WorldQuakeViewer2
             /// 表示処理
             /// </summary>
             [Description("表示処理\n設定の表示設定と同じです。")]
-            public Config_Display.View_ View { get; set; }
+            public Config_Display.C_View View { get; set; }
 
             /// <summary>
             /// PastConfig_DisplayからPastConfigに変換します。
@@ -1877,7 +1878,7 @@ namespace WorldQuakeViewer2
             {
                 URL = from.URL,
                 ProType = from.ProType,
-                View = (Config_Display.View_)from.View
+                View = (Config_Display.C_View)from.View
             };
         }
     }

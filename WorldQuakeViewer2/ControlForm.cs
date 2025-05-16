@@ -1,7 +1,9 @@
 using System.Drawing.Imaging;
 using System.Media;
 using System.Text;
-using static WorldQuakeViewer2.Utilities;
+using System.Text.Json;
+using WorldQuakeViewer2.Utilities;
+using static WorldQuakeViewer2.Utilities.Utilities;
 
 namespace WorldQuakeViewer2
 {
@@ -15,7 +17,7 @@ namespace WorldQuakeViewer2
         /// <summary>
         /// バージョン(プロジェクトのバージョン、_versionも変えること)
         /// </summary>
-        public const string Version = "1.0.0-α1";
+        public readonly string Version = typeof(Program).Assembly.GetName().Version!.ToString();
 
         /// <summary>
         /// ダイアログ等を最前面に表示する用
@@ -81,6 +83,11 @@ namespace WorldQuakeViewer2
         /// ユーザー震央辞書
         /// </summary>
         internal static LL2FERC.LL2FERC.FromFile? hypoUser = null;
+
+        /// <summary>
+        /// JSON保存読み込み時の設定
+        /// </summary>
+        internal readonly static JsonSerializerOptions jsonOptions = new() { WriteIndented = true, Converters = { new JsonConverter_Color() } };
 
         /// <summary>
         /// 読み込み時初期化処理

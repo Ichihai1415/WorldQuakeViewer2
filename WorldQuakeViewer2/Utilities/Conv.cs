@@ -2,7 +2,7 @@
 using System.Xml;
 using static LL2FERC.LL2FERC;
 
-namespace WorldQuakeViewer2
+namespace WorldQuakeViewer2.Utilities
 {
     /// <inheritdoc/>
     public partial class Utilities

@@ -2,9 +2,11 @@
 using System.Media;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 using WorldQuakeViewer2.Properties;
+using static WorldQuakeViewer2.ControlForm;
 
-namespace WorldQuakeViewer2
+namespace WorldQuakeViewer2.Utilities
 {
     /// <inheritdoc/>
     public partial class Utilities
@@ -551,6 +553,38 @@ namespace WorldQuakeViewer2
         {
             DialogResult ok = MessageBox.Show(topMost, text, title, MessageBoxButtons.OKCancel, icon);
             return ok == DialogResult.OK;
+        }
+
+        /// <summary>
+        /// 設定を保存します。
+        /// </summary>
+        /// <param name="value">保存する内容</param>
+        /// <param name="name">保存名(例:get/draw/other/map-generator)</param>
+        public static void SaveConfig(object value, string name)
+        {
+            var jsonString = JsonSerializer.Serialize(value, jsonOptions);
+            Directory.CreateDirectory("Config");
+            File.WriteAllText("Config\\" + name + ".json", jsonString);
+        }
+
+        /// <summary>
+        /// 設定を読み込みます。
+        /// </summary>
+        /// <typeparam name="T">型</typeparam>
+        /// <param name="name">保存名(例:get/draw/other/map-generator)</param>
+        /// <returns>指定された設定、ファイルがなければ新規作成、保存</returns>
+        public static T LoadConfig<T>(string name)
+        {
+            if (File.Exists("Config\\" + name + ".json"))
+            {
+                var jsonString = File.ReadAllText("Config\\" + name + ".json");
+                return JsonSerializer.Deserialize<T>(jsonString, jsonOptions)!;
+            }
+            else
+            {
+                SaveConfig(Activator.CreateInstance<T>()!, name);
+                return Activator.CreateInstance<T>();
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace WorldQuakeViewer2
+﻿namespace WorldQuakeViewer2.Utilities
 {
     /// <inheritdoc/>
     public partial class Utilities

@@ -116,9 +116,19 @@ namespace WorldQuakeViewer2.Properties {
         /// <summary>
         ///   型 System.Byte[] のローカライズされたリソースを検索します。
         /// </summary>
-        internal static byte[] Sound {
+        internal static byte[] PB2002_steps_geojson_zip {
             get {
-                object obj = ResourceManager.GetObject("Sound", resourceCulture);
+                object obj = ResourceManager.GetObject("PB2002_steps_geojson_zip", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   型 System.Byte[] のローカライズされたリソースを検索します。
+        /// </summary>
+        internal static byte[] Sound_zip {
+            get {
+                object obj = ResourceManager.GetObject("Sound_zip", resourceCulture);
                 return ((byte[])(obj));
             }
         }
