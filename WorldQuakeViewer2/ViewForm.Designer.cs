@@ -1,4 +1,4 @@
-﻿namespace WorldQuakeViewer
+﻿namespace WorldQuakeViewer2
 {
     partial class DataView
     {

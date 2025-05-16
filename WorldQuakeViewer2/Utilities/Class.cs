@@ -3,7 +3,7 @@
     /// <summary>
     /// 色々
     /// </summary>
-    internal partial class Utilities//todo:https://seismicportal.eu/eventid/ 1地震の情報比較ツール
+    public partial class Utilities//todo:https://seismicportal.eu/eventid/ 1地震の情報比較ツール
     {
         /*例
          * catalog|url|misfit|eventid

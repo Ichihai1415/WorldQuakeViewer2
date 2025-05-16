@@ -7,7 +7,7 @@ using WorldQuakeViewer2.Properties;
 namespace WorldQuakeViewer2
 {
     /// <inheritdoc/>
-    internal partial class Utilities
+    public partial class Utilities
     {
         /// <summary>
         /// 実行ログを保存・表示します。

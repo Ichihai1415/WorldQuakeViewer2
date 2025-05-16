@@ -5,7 +5,7 @@ using static LL2FERC.LL2FERC;
 namespace WorldQuakeViewer2
 {
     /// <inheritdoc/>
-    internal partial class Utilities
+    public partial class Utilities
     {
         /// <summary>
         /// マグニチュードからレベルに変換します。

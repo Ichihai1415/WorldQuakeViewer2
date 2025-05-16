@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using WorldQuakeViewer2.Properties;
+using static WorldQuakeViewer2.Utilities;
 
 namespace WorldQuakeViewer2
 {

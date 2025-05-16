@@ -1,4 +1,5 @@
-﻿namespace WorldQuakeViewer2
+﻿using static WorldQuakeViewer2.Utilities;
+namespace WorldQuakeViewer2
 {
     /// <summary>
     /// データ表示Form

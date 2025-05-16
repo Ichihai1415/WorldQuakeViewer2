@@ -3,7 +3,7 @@
 namespace WorldQuakeViewer2
 {
     /// <inheritdoc/>
-    internal partial class Utilities
+    public partial class Utilities
     {
         /// <summary>
         /// 設定保存用クラス
@@ -19,11 +19,11 @@ namespace WorldQuakeViewer2
             /// <summary>
             /// 処理するデータ元ごとのデータ処理
             /// </summary>
-            public C_Data[] Datas { get; set; } = new int[DataAuthorCount].Select((n, i) => new C_Data
+            public C_Data[] Datas { get; set; } = [.. new int[DataAuthorCount].Select((n, i) => new C_Data
             {
                 Name = ((DataAuthor)i).ToString(),
                 URL = DataDefURL[(DataAuthor)Enum.ToObject(typeof(DataAuthor), i)]//enum追加時も変えなくてもいいように
-            }).ToArray();
+            })];
 
             /// <summary>
             /// 画面ごとの表示処理

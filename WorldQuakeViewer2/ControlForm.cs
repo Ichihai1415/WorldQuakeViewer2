@@ -1,6 +1,7 @@
 using System.Drawing.Imaging;
 using System.Media;
 using System.Text;
+using static WorldQuakeViewer2.Utilities;
 
 namespace WorldQuakeViewer2
 {

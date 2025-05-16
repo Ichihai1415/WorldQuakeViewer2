@@ -1,7 +1,7 @@
 ﻿namespace WorldQuakeViewer2
 {
     /// <inheritdoc/>
-    internal partial class Utilities
+    public partial class Utilities
     {
         /// <summary>
         /// データ元
